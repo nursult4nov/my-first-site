@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1214">
+<meta name="description" content="Интерактивная 3D-презентация экспонатов Национального центрального музея Республики Казахстан в Алматы.">
+<meta property="og:title" content="Национальный центральный музей РК — 3D-презентация">
+<meta property="og:description" content="11 экспонатов в 3D, видеоэкскурсия и музейный квиз.">
+<title>Национальный центральный музей РК — 3D-презентация</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e1214'/%3E%3Cpath d='M32 10l18 22-18 22-18-22z' fill='%23c89a45'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div>
+<div class="spot" aria-hidden="true"></div>
+<div id="pg"></div>
+<div id="ld" role="status"><i></i><span id="ldt">Загрузка…</span></div>
+<header class="top"><a class="brand" href="#1">Музей РК · Алматы</a>
+<div class="tb"><button class="ib" id="tb" title="Автоматический показ экспонатов (T)">▶ Экскурсия</button><button class="ib" id="hb" title="Подсказки (?)" aria-label="Подсказки">?</button><button class="ib" id="fs">На весь экран</button></div></header>
+<div class="dots" id="dots"></div>
+<div class="ctl" aria-label="Управление презентацией"><button class="ib" id="pv" aria-label="Назад">←</button><span id="ct"></span><button class="ib" id="nx" aria-label="Вперёд">→</button></div>
+
+<div class="deck"><div class="track" id="tr">
+
+<section class="slide hero" id="home" data-t="Начало"><video autoplay muted loop playsinline preload="metadata"><source src="museum.mp4" type="video/mp4"></video>
+<div class="two"><div>
+<div class="eyebrow">Национальный центральный музей РК</div>
+<h1>Музей, который можно <em>покрутить в руках</em></h1>
+<p class="lede">Мы побывали в Национальном центральном музее Республики Казахстан в Алматы и собрали экспонаты в 3D. Листайте стрелками, колесом мыши или свайпом.</p>
+<div class="hbtns"><button class="btn" data-goid="over">Смотреть экспонаты</button><button class="btn ghost" data-goid="game">Сыграть в квиз</button></div>
+<ul class="stats"><li><b data-count="1931">1931</b><span>год основания</span></li><li><b>300 000+</b><span>единиц хранения</span></li><li><b>11</b><span>3D-экспонатов</span></li></ul></div>
+<div class="slot arch" data-m="0"><small>Золотой человек · потяните, чтобы повернуть</small></div></div><div class="band"></div></section>
+
+<section class="slide alt" id="visit" data-t="Наш визит"><div class="eyebrow">Как всё было</div><h2>Как прошёл наш <em>визит</em></h2>
+<p class="sub">Музей основан в 1931 году, в его фондах более 300 000 единиц хранения. Вот что мы делали, пока готовили проект.</p>
+<ol class="steps"><li><b>Пришли в музей</b><span>Прошли по залам: археология, этнография, история XX века.</span></li>
+<li><b>Выбрали экспонаты</b><span>Отобрали 11 предметов, которые лучше всего рассказывают об эпохах.</span></li>
+<li><b>Сделали 3D-модели</b><span>Построили модели, которые можно вращать и приближать.</span></li>
+<li><b>Собрали презентацию</b><span>Добавили видео о музее и игру-квиз по QR-коду.</span></li></ol></section>
+
+<section class="slide" id="over" data-t="Все экспонаты"><div class="eyebrow">Коллекция</div><h2>11 <em>экспонатов</em></h2><p class="sub">Нажмите на любой, чтобы открыть его 3D-модель. Можно отфильтровать по теме или найти по слову.</p>
+<div class="fbar"><div class="flt" id="flt"></div><input class="search" id="sq" type="search" placeholder="Поиск: золото, ковёр, бронза…" aria-label="Поиск по экспонатам" autocomplete="off"></div>
+<p class="st" id="ovn"></p>
+<div class="ov" id="ov"></div></section>
+
+<!-- слайды экспонатов создаются скриптом перед «Итогами» -->
+
+<section class="slide alt" id="themes" data-t="Темы коллекции"><div class="eyebrow">Итоги</div><h2>Коллекция по <em>темам</em></h2><p class="sub">Выберите экспонат, чтобы вернуться к его модели.</p><div class="halls" id="cats"></div></section>
+
+<section class="slide" id="vid" data-t="Видео"><div class="eyebrow">Экскурсия</div><h2>Видео о <em>музее</em></h2><p class="sub">Короткая экскурсия по залам от UNESCO Almaty.</p>
+<div class="film"><iframe loading="lazy" src="https://www.youtube.com/embed/YgiswTx7l_A?rel=0&modestbranding=1" title="Национальный центральный музей РК — UNESCO Almaty" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div></section>
+
+<section class="slide" id="halls" data-t="Залы"><div class="eyebrow">Экспозиция</div><h2>Залы <em>музея</em></h2><p class="sub">Музей рассказывает историю страны по четырём направлениям.</p>
+<div class="halls"><div class="hall"><h3>Палеонтология и археология</h3><p>От древнейших находок до золота сакских курганов и предметов Шёлкового пути.</p></div>
+<div class="hall"><h3>Историческая этнография</h3><p>Традиционная культура казахов: ковры, одежда, украшения, предметы быта.</p></div>
+<div class="hall"><h3>Золотая Орда</h3><p>Средневековая история степи: государства, города и торговые связи.</p></div>
+<div class="hall"><h3>Суверенный Казахстан</h3><p>Новейшая история страны и материалы XX века, включая радио и документы.</p></div></div></section>
+
+<section class="slide alt" id="game" data-t="Игра"><div class="two"><div>
+<div class="eyebrow">Играем вместе</div><h2>Музейный <em>квиз</em></h2><p class="sub">Отсканируйте QR-код телефоном и проверьте, что вы запомнили. 10 вопросов, 15 секунд на ответ, очки за скорость и серию правильных ответов.</p>
+<div class="qr"><div id="qr">QR появится, когда сайт будет в интернете</div><div><button class="btn" id="fl">Играть на экране</button><button class="btn ghost" id="cp">Копировать ссылку</button><p class="st" id="fu"></p></div></div></div>
+<div class="board"><h3>Лучшие результаты</h3><div class="res" id="rs"></div><p class="st" id="ps"></p></div></div></section>
+
+<section class="slide" id="team" data-t="Команда"><div class="eyebrow">Авторы</div><h2>Команда <em>проекта</em></h2><p class="sub">Спасибо, что дошли до конца!</p><div class="team" id="tm"></div></section>
+
+</div></div>
+
+<div class="gm" id="gm" hidden><button class="ib gx" id="gx">Закрыть ✕</button><iframe id="gf" title="Музейный квиз" allow="fullscreen"></iframe></div>
+
+<div class="help" id="help" hidden role="dialog" aria-modal="true" aria-label="Подсказки"><div class="hp"><button class="ib" id="hx" aria-label="Закрыть">✕</button><h3>Как управлять</h3>
+<ul><li><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd> или колесо мыши — листать слайды</li>
+<li><kbd>Пробел</kbd> — следующий слайд, <kbd>Home</kbd> / <kbd>End</kbd> — в начало и в конец</li>
+<li><kbd>T</kbd> — автоэкскурсия по экспонатам</li>
+<li><kbd>F</kbd> — весь экран</li>
+<li>Мышь или палец на модели — вращать, колесо или щипок — масштаб, двойной клик — сброс</li>
+<li><kbd>A</kbd> автовращение · <kbd>W</kbd> каркас · <kbd>L</kbd> свет · <kbd>R</kbd> сброс вида</li>
+<li><kbd>?</kbd> — это окно, <kbd>Esc</kbd> — закрыть</li></ul></div></div>
+
+<noscript><p style="position:fixed;inset:0;display:grid;place-items:center;background:#0e1214;color:#f8f6f0;font:16px sans-serif;z-index:999">Для просмотра презентации включите JavaScript.</p></noscript>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

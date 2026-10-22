@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1214">
+<title>Музейный квиз — Национальный центральный музей РК</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e1214'/%3E%3Cpath d='M32 10l18 22-18 22-18-22z' fill='%23c89a45'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e1214;--gold:#c89a45;--gold2:#ecca85;--white:#f8f6f0;--muted:#a9ada7;--line:rgba(255,255,255,.14);--ok:#58c58a;--bad:#e5645a;--serif:"Playfair Display",Georgia,serif;--sans:"Manrope",system-ui,Arial,sans-serif;--ease:cubic-bezier(.22,1,.36,1)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--ink);color:var(--white);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+body{min-height:100dvh;display:flex;justify-content:center;background:
+ radial-gradient(ellipse at 85% 0%,rgba(200,154,69,.22),transparent 45%),
+ radial-gradient(ellipse at 0% 100%,rgba(95,184,196,.12),transparent 45%),var(--ink)}
+button{font:inherit;color:inherit}
+.app{width:100%;max-width:560px;min-height:100dvh;padding:max(22px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom));display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2)}
+.brand::before{content:"◈";color:var(--gold)}
+.scr{display:none;flex:1;flex-direction:column;justify-content:center;animation:in .6s var(--ease)}
+.scr.on{display:flex}
+@keyframes in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+h1,h2{font-family:var(--serif);font-weight:600;line-height:1.02;margin:0;letter-spacing:-.03em}
+h1{font-size:clamp(40px,12vw,62px)}
+h1 em,h2 em{font-style:italic;font-weight:500;background:linear-gradient(100deg,var(--gold2),var(--gold) 60%,#a97a2c);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:clamp(28px,8vw,40px)}
+p{color:var(--muted);line-height:1.65;font-size:16px;margin:14px 0 0}
+.card{border:1px solid var(--line);border-radius:22px;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));backdrop-filter:blur(10px);padding:22px;margin-top:22px}
+input{width:100%;min-height:52px;padding:0 18px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.06);color:var(--white);font:600 17px var(--sans);outline:none;transition:border-color .25s}
+input:focus{border-color:var(--gold)}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;margin-top:14px;border:0;border-radius:999px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#171208;font-weight:800;font-size:17px;cursor:pointer;box-shadow:0 10px 34px rgba(200,154,69,.28);transition:transform .25s var(--ease)}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;color:var(--white);border:1px solid var(--line);box-shadow:none}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+.rules div{padding:14px 10px;border:1px solid var(--line);border-radius:16px;text-align:center;background:rgba(255,255,255,.03)}
+.rules b{display:block;font:600 26px var(--serif);color:var(--gold2)}
+.rules span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.hud{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--muted)}
+.hud b{color:var(--white)}
+.bar{height:6px;margin-top:12px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden}
+.bar i{display:block;height:100%;width:100%;border-radius:9px;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .1s linear}
+.bar.low i{background:linear-gradient(90deg,#c9433a,var(--bad))}
+.prog{display:flex;gap:5px;margin-top:16px}
+.prog i{flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.12)}
+.prog i.d{background:var(--gold)}
+.prog i.w{background:var(--bad)}
+.qt{margin:26px 0 8px;font:600 clamp(24px,6.6vw,32px)/1.15 var(--serif);letter-spacing:-.02em;min-height:3.5em}
+.opts{display:grid;gap:10px;margin-top:10px}
+.o{min-height:58px;padding:12px 18px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.05);text-align:left;font-weight:700;font-size:16px;cursor:pointer;transition:transform .2s var(--ease),border-color .25s,background .25s;display:flex;align-items:center;gap:14px}
+.o::before{content:attr(data-k);display:grid;place-items:center;width:30px;height:30px;flex:none;border-radius:50%;border:1px solid var(--line);font-size:13px;color:var(--gold2)}
+.o:active{transform:scale(.98)}
+.o.ok{border-color:var(--ok);background:rgba(88,197,138,.16)}
+.o.bad{border-color:var(--bad);background:rgba(229,100,90,.16);animation:shake .4s}
+.o.dim{opacity:.45}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.fact{margin-top:14px;padding:14px 16px;border-radius:16px;background:rgba(200,154,69,.1);border:1px solid rgba(200,154,69,.3);font-size:14px;line-height:1.55;color:#e9dfc6;display:none}
+.fact.on{display:block;animation:in .4s var(--ease)}
+.score{font:600 clamp(70px,22vw,110px)/1 var(--serif);color:var(--gold2);letter-spacing:-.04em;margin:8px 0 0}
+.rank{display:inline-block;margin-top:6px;padding:7px 16px;border-radius:999px;border:1px solid var(--gold);color:var(--gold2);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase}
+.lb{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.lb li{display:flex;gap:12px;align-items:center;padding:10px 14px;border:1px solid var(--line);border-radius:12px;font-weight:700;font-size:14px;background:rgba(255,255,255,.04)}
+.lb li b{width:22px;color:var(--gold)}
+.lb li span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb li.me{border-color:var(--gold);background:rgba(200,154,69,.12)}
+.top{display:flex;justify-content:space-between;align-items:center}
+.snd{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,.05);font-size:16px;cursor:pointer;opacity:.9}
+.snd.off{opacity:.4}
+.streak{min-height:22px;margin-top:10px;text-align:center;font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--gold2)}
+.rvl{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-size:14px;line-height:1.45}
+.rvl li{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04)}
+.rvl b{display:block;color:var(--white);margin-bottom:3px}.rvl span{color:var(--ok);font-weight:700}
+.o:focus-visible,.btn:focus-visible,input:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
+.o kbd{display:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+canvas#cf{position:fixed;inset:0;pointer-events:none;z-index:9}
+</style>
+</head>
+<body>
+<canvas id="cf"></canvas>
+<main class="app">
+ <div class="top"><div class="brand">Музей РК · Алматы</div><button class="snd" id="snd" aria-label="Звук" title="Звук">🔊</button></div>
+
+ <section class="scr on" id="s-start">
+  <h1>Музейный <em>квиз</em></h1>
+  <p>Проверьте, что вы запомнили об экспонатах Национального центрального музея Республики Казахстан. Правильные ответы подряд дают бонус за серию.</p>
+  <div class="rules"><div><b>10</b><span>вопросов</span></div><div><b>15</b><span>секунд</span></div><div><b>+50</b><span>за скорость</span></div></div>
+  <div class="card"><input id="nm" maxlength="16" placeholder="Ваше имя" autocomplete="nickname"><button class="btn" id="go">Начать игру</button></div>
+ </section>
+
+ <section class="scr" id="s-play">
+  <div class="hud"><span>ВОПРОС <b id="qn">1</b> / 10</span><span>СЧЁТ <b id="sc">0</b></span></div>
+  <div class="bar" id="bar"><i id="bi"></i></div>
+  <div class="prog" id="pr"></div>
+  <div class="qt" id="qt"></div>
+  <div class="opts" id="op"></div>
+  <div class="fact" id="ft"></div><div class="streak" id="sk"></div>
+  <button class="btn" id="nx" style="display:none">Дальше</button>
+ </section>
+
+ <section class="scr" id="s-end">
+  <div style="text-align:center">
+   <div class="rank" id="rk"></div>
+   <div class="score" id="fs">0</div>
+   <p id="fm"></p>
+  </div>
+  <div class="card" id="rv" style="display:none"><h2 style="font-size:20px;margin-bottom:12px">Стоит повторить</h2><ul class="rvl" id="rvl"></ul></div>
+  <div class="card"><h2 style="font-size:22px;margin-bottom:14px">Лучшие на этом телефоне</h2><ol class="lb" id="lb"></ol></div>
+  <button class="btn" id="again">Сыграть ещё раз</button><button class="btn ghost" id="share">Поделиться результатом</button>
+ </section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s),TIME=15,N=10;
+const Q=[
+{q:"В каком году основан Национальный центральный музей РК?",a:["1931","1917","1945","1991"],c:0,f:"Музей основан в 1931 году — сегодня в его фондах более 300 000 единиц хранения."},
+{q:"Золотой человек — реконструкция находки из какого кургана?",a:["Иссыкского","Берельского","Пазырыкского","Аркаимского"],c:0,f:"Золотой человек связан с Иссыкским курганом и стал одним из главных образов раннего кочевого мира Казахстана."},
+{q:"К какому времени относят Золотого человека?",a:["IV–III вв. до н.э.","XII в. н.э.","XVIII в.","XX в."],c:0,f:"Находку относят к IV–III векам до нашей эры — эпохе саков."},
+{q:"Из какого материала сделан казахский кілем?",a:["Из шерсти","Из шёлка","Из льна","Из бумаги"],c:0,f:"Ковры делают из шерсти, а орнамент в них — это язык памяти, быта и обрядов."},
+{q:"Как китайский фарфор попал на территорию Казахстана?",a:["По торговым путям Шёлкового пути","Его сделали местные мастера","Его привезли в XX веке","Он найден в пещере"],c:0,f:"По Великому Шёлковому пути в Семиречье и Южный Казахстан приходили вещи и технологии издалека."},
+{q:"Из чего сделаны тюркские каменные изваяния?",a:["Из камня","Из дерева","Из глины","Из льда"],c:0,f:"Изваяния — наследие тюркских кочевников и важный источник знаний об их представлениях о мире."},
+{q:"Какой экспонат связан с историей казахстанского радио?",a:["Радио «Sanyo»","Золотой человек","Бронзовый котёл","Кілем"],c:0,f:"Транзисторный радиоприёмник представлен на музейных выставках об истории XX века."},
+{q:"К какому времени относятся бронзовые котлы в музее?",a:["Сакское время","Золотая Орда","Новое время","Космическая эра"],c:0,f:"Котлы и жертвенники — характерные предметы культуры ранних кочевников."},
+{q:"В долине какой реки найдены памятники письменности эпохи Кангюя?",a:["Арысь","Иртыш","Урал","Или"],c:0,f:"Раскопки долины Арыси отражают развитие культуры Южного Казахстана."},
+{q:"Сколько экспонатов в нашей 3D-презентации?",a:["11","3","25","100"],c:0,f:"Мы отобрали 11 предметов, которые лучше всего рассказывают об эпохах."},
+{q:"Сколько единиц хранения в фондах музея?",a:["Более 300 000","Около 3 000","Около 30 000","Ровно 1 000 000"],c:0,f:"Более 300 000 единиц хранения — от археологии до материалов XX века."},
+{q:"Какой зал рассказывает о новейшей истории страны?",a:["Суверенный Казахстан","Золотая Орда","Палеонтология","Историческая этнография"],c:0,f:"Там же показаны материалы XX века, включая радио и документы."},
+{q:"Из какого металла сделано иранское блюдо из коллекции?",a:["Из меди","Из серебра","Из алюминия","Из свинца"],c:0,f:"Фрагмент медного иранского блюда — свидетельство международных культурных контактов."},
+{q:"Что означает орнамент «қошқар мүйіз»?",a:["Рога барана","Крылья орла","Горные вершины","Лучи солнца"],c:0,f:"«Қошқар мүйіз» — один из самых известных казахских орнаментов, его часто вплетают в ковры."},
+{q:"Что такое саукеле?",a:["Головной убор невесты","Музыкальный инструмент","Вид оружия","Часть юрты"],c:0,f:"Высокое расшитое саукеле — праздничный головной убор в традиционной культуре казахов."},
+{q:"Как называется традиционный казахский ковёр?",a:["Кілем","Шапан","Домбыра","Кобыз"],c:0,f:"Кілем — шерстяной ковёр, главное украшение интерьера юрты и дома."},
+{q:"Золотой человек найден в кургане недалеко от какого города?",a:["Алматы","Астана","Актау","Атырау"],c:0,f:"Иссыкский курган находится в Алматинской области, совсем рядом с Алматы."},
+{q:"Какой путь связывал Восток и Запад и приносил на земли Казахстана фарфор?",a:["Великий Шёлковый путь","Янтарный путь","Путь из варяг в греки","Чайный путь"],c:0,f:"По Великому Шёлковому пути шли товары, идеи и технологии."},
+{q:"Какой цвет у росписи китайской вазы в нашей 3D-модели?",a:["Кобальтово-синий","Зелёный","Красный","Чёрный"],c:0,f:"Кобальтовая роспись по белому фарфору — классика китайской керамики."},
+{q:"Какие камни украшают диадему в нашей 3D-модели Каргалинского золота?",a:["Бирюза","Рубин","Изумруд","Алмаз"],c:0,f:"Бирюзовые вставки красиво оттеняют золото."},
+{q:"Для чего кочевникам были нужны котлы сакской эпохи?",a:["Для обрядов и быта","Для хранения книг","Для охоты","Для навигации"],c:0,f:"Котлы использовали в быту и в обрядах."},
+{q:"В каком городе находится Национальный центральный музей РК?",a:["Алматы","Шымкент","Караганда","Павлодар"],c:0,f:"Музей расположен в Алматы."}
+];
+const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const esc=s=>String(s).replace(/[<>&"']/g,'');
+let L,i,score,right,left,raf,locked,name,streak,miss,t0,sound=store.get('museumQuizSound',true);
+/* звук */
+let AC;const beep=(f,d,type='sine',v=.06,at=0)=>{if(!sound)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.value=v;g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+at+d);o.connect(g);g.connect(AC.destination);o.start(AC.currentTime+at);o.stop(AC.currentTime+at+d)}catch(e){}};
+const sfx={ok(){beep(660,.14,'sine',.07);beep(880,.2,'sine',.07,.1)},bad(){beep(180,.28,'sawtooth',.05)},end(){[523,659,784,1047].forEach((f,k)=>beep(f,.25,'triangle',.07,k*.12))}};
+const sndBtn=$('#snd');const paintSnd=()=>{sndBtn.textContent=sound?'🔊':'🔇';sndBtn.classList.toggle('off',!sound)};paintSnd();
+sndBtn.onclick=()=>{sound=!sound;store.set('museumQuizSound',sound);paintSnd();if(sound)sfx.ok()};
+
+const show=id=>{document.querySelectorAll('.scr').forEach(s=>s.classList.toggle('on',s.id==='s-'+id));scrollTo(0,0)};
+$('#nm').value=store.get('museumQuizName','');
+$('#go').onclick=start;$('#again').onclick=()=>{show('start');$('#nm').focus()};
+$('#nm').onkeydown=e=>{if(e.key==='Enter')start()};
+function start(){name=esc($('#nm').value.trim().slice(0,16))||'Гость';store.set('museumQuizName',name);
+ L=sh(Q).slice(0,N).map(q=>({q:q.q,f:q.f,o:sh(q.a.map((t,k)=>({t,ok:k===q.c})))}));i=0;score=0;right=0;streak=0;miss=[];
+ $('#pr').innerHTML=L.map(()=>'<i></i>').join('');show('play');ask()}
+function ask(){locked=false;const q=L[i];$('#qn').textContent=i+1;$('#sc').textContent=score;$('#qt').textContent=q.q;
+ $('#op').innerHTML=q.o.map((o,k)=>`<button class="o" data-k="${'ABCD'[k]}" data-i="${k}"></button>`).join('');
+ [...document.querySelectorAll('.o')].forEach((b,k)=>{b.textContent=q.o[k].t;b.onclick=()=>pick(+b.dataset.i)});
+ $('#ft').className='fact';$('#nx').style.display='none';$('#sk').textContent=streak>1?`🔥 Серия: ${streak}`:'';
+ t0=performance.now();left=TIME;tick();cancelAnimationFrame(raf);
+ const loop=()=>{left=TIME-(performance.now()-t0)/1000;tick();if(left<=0){pick(-1)}else raf=requestAnimationFrame(loop)};raf=requestAnimationFrame(loop)}
+function tick(){const p=Math.max(0,left/TIME*100);$('#bi').style.width=p+'%';$('#bar').classList.toggle('low',left<5)}
+function pick(k){if(locked)return;locked=true;cancelAnimationFrame(raf);const q=L[i],bs=[...document.querySelectorAll('.o')],ok=k>=0&&q.o[k].ok;
+ bs.forEach((b,n)=>{b.classList.add(q.o[n].ok?'ok':(n===k?'bad':'dim'));b.disabled=true});
+ let gain=0;
+ if(ok){right++;streak++;gain=100+Math.round(Math.max(0,left)/TIME*50)+Math.min(streak-1,4)*10;score+=gain;$('#sc').textContent=score;sfx.ok()}
+ else{streak=0;miss.push({q:q.q,a:q.o.find(o=>o.ok).t});sfx.bad()}
+ $('#sk').textContent=ok?(streak>1?`🔥 Серия: ${streak}  ·  +${gain}`:`+${gain}`):'';
+ $('#pr').children[i].className=ok?'d':'w';
+ $('#ft').textContent=(ok?'Верно! ':k<0?'Время вышло. ':'Не совсем. ')+q.f;$('#ft').className='fact on';
+ const nx=$('#nx');nx.textContent=i===N-1?'Результат':'Дальше';nx.style.display='flex';nx.onclick=()=>{i++;i<N?ask():end()};setTimeout(()=>nx.focus({preventScroll:true}),50);
+ nx.scrollIntoView({behavior:'smooth',block:'nearest'});
+ if(navigator.vibrate)navigator.vibrate(ok?15:[30,40,30])}
+const rankOf=s=>s>=1300?'Директор музея':s>=950?'Хранитель музея':s>=550?'Исследователь':'Новичок';
+function end(){show('end');$('#fs').textContent=score;
+ const rank=rankOf(score);
+ $('#rk').textContent=rank;$('#fm').textContent=`Правильных ответов: ${right} из ${N}`;
+ const b=store.get('museumQuizBoard',[]);const me={name,score,right,t:Date.now()};b.push(me);b.sort((x,y)=>y.score-x.score);const top=b.slice(0,20);store.set('museumQuizBoard',top);
+ $('#lb').innerHTML=top.slice(0,5).map((r,n)=>`<li class="${r.t===me.t?'me':''}"><b>${n+1}</b><span>${esc(r.name)}</span><em style="font-style:normal">${r.score}</em></li>`).join('');
+ const rv=$('#rv');rv.style.display=miss.length?'block':'none';
+ $('#rvl').innerHTML=miss.map(m=>`<li><b>${esc(m.q)}</b><span>Верный ответ: ${esc(m.a)}</span></li>`).join('');
+ try{if(parent!==window)parent.postMessage({quizScore:me},'*')}catch(e){}
+ sfx.end();if(right>=7)confetti()}
+$('#share').onclick=async()=>{const txt=`Я сыграл(а) в музейный квиз Национального центрального музея РК: ${score} очков, ${right} из ${N}. Звание — «${rankOf(score)}». Сможете лучше?`;
+ try{if(navigator.share){await navigator.share({title:'Музейный квиз',text:txt,url:location.href.split('?')[0]});return}}catch(e){if(e&&e.name==='AbortError')return}
+ try{await navigator.clipboard.writeText(txt+' '+location.href.split('?')[0]);$('#share').textContent='Скопировано ✓'}catch(e){prompt('Скопируйте текст:',txt)}setTimeout(()=>$('#share').textContent='Поделиться результатом',1800)};
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+ if(document.querySelector('#s-play.on')){const n=({'1':0,'2':1,'3':2,'4':3,a:0,b:1,c:2,d:3,ф:0,и:1,с:2,в:3})[e.key.toLowerCase()];
+  if(n!==undefined&&!locked&&document.querySelectorAll('.o')[n]){pick(n)}
+  else if((e.key==='Enter'||e.key===' ')&&locked&&e.target.tagName!=='BUTTON'){e.preventDefault();$('#nx').click()}}});
+function confetti(){const c=$('#cf'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;const P=Array.from({length:130},()=>({x:innerWidth/2,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-3,r:Math.random()*6+3,c:['#ecca85','#c89a45','#f8f6f0','#58c58a'][Math.random()*4|0],a:Math.random()*6}));let f=0;
+ (function loop(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.35;p.a+=.2;x.fillStyle=p.c;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++f<170)requestAnimationFrame(loop);else x.clearRect(0,0,c.width,c.height)})()}
+</script>
+</body>
+</html>
